@@ -23,76 +23,24 @@
                     <div class="col-lg-6 col-12">
                         <div class="table-pricing paket-gila">
                             <p class="story text-center">
-                                GILA BELAJAR
+                                {{ $camps[0]->title }}
                             </p>
                             <h1 class="price text-center">
-                                $280K
+                                {{ $camps[0]->price }}
                             </h1>
+                            @foreach ($camps[0]->benefits as $benefit)
                             <div class="item-benefit-pricing mb-4">
                                 <img src="{{ asset('assets/images/ic_check.svg') }}" alt="">
                                 <p>
-                                    Pro Techstack Kit
+                                    {{ $benefit->name }}
                                 </p>
                                 <div class="clear"></div>
                                 <div class="divider"></div>
                             </div>
-                            <div class="item-benefit-pricing mb-4">
-                                <img src="{{ asset('assets/images/ic_check.svg') }}" alt="">
-                                <p>
-                                    iMac Pro 2021 & Display
-                                </p>
-                                <div class="clear"></div>
-                                <div class="divider"></div>
-                            </div>
-                            <div class="item-benefit-pricing mb-4">
-                                <img src="{{ asset('assets/images/ic_check.svg') }}" alt="">
-                                <p>
-                                    1-1 Mentoring Program
-                                </p>
-                                <div class="clear"></div>
-                                <div class="divider"></div>
-                            </div>
-                            <div class="item-benefit-pricing mb-4">
-                                <img src="{{ asset('assets/images/ic_check.svg') }}" alt="">
-                                <p>
-                                    Final Project Certificate
-                                </p>
-                                <div class="clear"></div>
-                                <div class="divider"></div>
-                            </div>
-                            <div class="item-benefit-pricing mb-4">
-                                <img src="{{ asset('assets/images/ic_check.svg') }}" alt="">
-                                <p>
-                                    Offline Course Videos
-                                </p>
-                                <div class="clear"></div>
-                                <div class="divider"></div>
-                            </div>
-                            <div class="item-benefit-pricing mb-4">
-                                <img src="{{ asset('assets/images/ic_check.svg') }}" alt="">
-                                <p>
-                                    Future Job Opportinity
-                                </p>
-                                <div class="clear"></div>
-                                <div class="divider"></div>
-                            </div>
-                            <div class="item-benefit-pricing mb-4">
-                                <img src="{{ asset('assets/images/ic_check.svg') }}" alt="">
-                                <p>
-                                    Premium Design Kit
-                                </p>
-                                <div class="clear"></div>
-                                <div class="divider"></div>
-                            </div>
-                            <div class="item-benefit-pricing">
-                                <img src="{{ asset('assets/images/ic_check.svg') }}" alt="">
-                                <p>
-                                    Website Builder
-                                </p>
-                                <div class="clear"></div>
-                            </div>
+                            @endforeach
                             <p>
-                                <a href="#" class="btn btn-master btn-primary w-100 mt-3">
+                                <a href="{{ route('checkout.index', $camps[0]) }}"
+                                    class="btn btn-master btn-primary w-100 mt-3">
                                     Take This Plan
                                 </a>
                             </p>
@@ -101,44 +49,24 @@
                     <div class="col-lg-6 col-12">
                         <div class="table-pricing paket-biasa">
                             <p class="story text-center">
-                                BARU MULAI
+                                {{ $camps[1]->title }}
                             </p>
                             <h1 class="price text-center">
-                                $140K
+                                {{ $camps[1]->price }}
                             </h1>
+                            @foreach ($camps[1]->benefits as $benefit)
                             <div class="item-benefit-pricing mb-4">
                                 <img src="{{ asset('assets/images/ic_check.svg') }}" alt="">
                                 <p>
-                                    1-1 Mentoring Program
+                                    {{ $benefit->name }}
                                 </p>
                                 <div class="clear"></div>
                                 <div class="divider"></div>
                             </div>
-                            <div class="item-benefit-pricing mb-4">
-                                <img src="{{ asset('assets/images/ic_check.svg') }}" alt="">
-                                <p>
-                                    Final Project Certificate
-                                </p>
-                                <div class="clear"></div>
-                                <div class="divider"></div>
-                            </div>
-                            <div class="item-benefit-pricing mb-4">
-                                <img src="{{ asset('assets/images/ic_check.svg') }}" alt="">
-                                <p>
-                                    Offline Course Videos
-                                </p>
-                                <div class="clear"></div>
-                                <div class="divider"></div>
-                            </div>
-                            <div class="item-benefit-pricing">
-                                <img src="{{ asset('assets/images/ic_check.svg') }}" alt="">
-                                <p>
-                                    Future Job Opportinity
-                                </p>
-                                <div class="clear"></div>
-                            </div>
+                            @endforeach
                             <p>
-                                <a href="#" class="btn btn-master btn-secondary w-100 mt-3">
+                                <a href="{{ route('checkout.index', $camps[1]) }}"
+                                    class="btn btn-master btn-secondary w-100 mt-3">
                                     Start With This Plan
                                 </a>
                             </p>

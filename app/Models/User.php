@@ -4,12 +4,16 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Exception;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -27,6 +31,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'avatar',
         'occupation',
         'is_admin',
+        'google_id',
+        'email_verified_at'
     ];
 
     /**
@@ -47,4 +53,56 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function checkouts()
+    {
+        return $this->hasMany(Checkout::class);
+    }
+
+    public function password(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => Hash::make($value)
+        );
+    }
+
+    // Cek User Google
+    public function cekUser($idGoogle)
+    {
+        return $this->whereGoogleId($idGoogle)->first();
+    }
+
+    // Create User Google
+    public function createUserGoogle($user)
+    {
+        $userCreate = $this->create([
+            'name' => $user->name,
+            'email' => $user->email,
+            'password' => 'password',
+            'avatar' => $user->avatar,
+            'google_id' => $user->id,
+            'email_verified_at' => date('Y-m-d H:i:s')
+        ]);
+
+        return $userCreate;
+    }
+
+    // User Login
+    public function userLogin(): User
+    {
+        return Auth::user();
+    }
+
+    // update User
+    public function userUpdate($validateData): User
+
+    {
+        $this->userLogin()->update([
+            'name' => $validateData['name'],
+            'email' => $validateData['email'],
+            'occupation' => $validateData['occupation']
+        ]);
+
+        return $this->userLogin();
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\User\CheckoutSucess;
+use App\Listeners\User\SendEmailAfterSuccessCheckout;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,6 +20,12 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        \App\Events\User\RegisteredSuccess::class => [
+            \App\Listeners\User\SendEmailAfterSuccessRegistered::class
+        ],
+        CheckoutSucess::class => [
+            SendEmailAfterSuccessCheckout::class
+        ]
     ];
 
     /**

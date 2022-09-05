@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-white mb-5">
     <div class="container">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="{{ route('main.dashboard') }}">
             <img src="{{ asset('assets/images/logo.png') }}" alt="">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -41,9 +41,15 @@
                         class="ms-2 user-photo rounded-circle">
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">My Dashboard</a></li>
+                    <li><a class="dropdown-item" href="{{ route('user.dashboard') }}">My Dashboard</a></li>
                     <li><a class="dropdown-item" href="#">Profile</a></li>
-                    <li><a class="dropdown-item" href="#">Logout</a></li>
+                    <li>
+                        <form action="{{ route('logout') }}" method="POST" class="d-inline" id="formLogout">
+                            @csrf
+                            <button type="submit" id="buttonLogout" class="dropdown-item"
+                                data-name="{{ auth()->user()->name }}">Logout</button>
+                        </form>
+                    </li>
                 </ul>
             </div>
             @endguest
@@ -51,3 +57,29 @@
         </div>
     </div>
 </nav>
+
+@auth
+@push('costum-js')
+<script>
+    const logout = document.forms['formLogout'];
+    const nameLogout = document.getElementById('buttonLogout').dataset.name;
+
+    logout.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+         Swal.fire({
+            title: `Are you sure Logout, ${nameLogout}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Logout!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    logout.submit();
+                }
+            })
+        });
+</script>
+@endpush
+@endauth

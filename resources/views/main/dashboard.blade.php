@@ -11,7 +11,7 @@
     <x-includes.step />
 
     {{-- Price --}}
-    <x-includes.price />
+    <x-includes.price :camps="$camps" />
 
     {{-- Testi --}}
     <x-includes.testi />

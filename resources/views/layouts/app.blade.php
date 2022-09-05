@@ -33,6 +33,9 @@
         integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous">
     </script>
 
+    @include('sweetalert::alert')
+
+    @stack('costum-js')
 </body>
 
 </html>
