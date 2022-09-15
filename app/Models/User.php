@@ -94,14 +94,9 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     // update User
-    public function userUpdate($validateData): User
-
+    public function userUpdate($validateDataUser): User
     {
-        $this->userLogin()->update([
-            'name' => $validateData['name'],
-            'email' => $validateData['email'],
-            'occupation' => $validateData['occupation']
-        ]);
+        $this->userLogin()->update($validateDataUser);
 
         return $this->userLogin();
     }

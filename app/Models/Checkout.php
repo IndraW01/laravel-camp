@@ -22,9 +22,14 @@ class Checkout extends Model
         'is_paid'
     ];
 
-    public function cekCheckout($campId): bool
+    public function user()
     {
-        return $this->whereUserId(Auth::id())->whereCampId($campId)->exists();
+        return $this->belongsTo(User::class);
+    }
+
+    public function camp()
+    {
+        return $this->belongsTo(Camp::class);
     }
 
     public function createdAt(): Attribute
@@ -43,14 +48,9 @@ class Checkout extends Model
         );
     }
 
-    public function user()
+    public function cekCheckout($campId): bool
     {
-        return $this->belongsTo(User::class);
-    }
-
-    public function camp()
-    {
-        return $this->belongsTo(Camp::class);
+        return $this->whereUserId(Auth::id())->whereCampId($campId)->exists();
     }
 
     public function checkoutCreate($campId, $userId, $validateData)
@@ -61,6 +61,18 @@ class Checkout extends Model
             'card_number' => $validateData['card_number'],
             'expired' => date('Y-m-t', strtotime($validateData['expired'])),
             'cvc' => $validateData['cvc'],
+        ]);
+    }
+
+    public function getCheckouts()
+    {
+        return $this->with(['user', 'camp'])->oldest()->get();
+    }
+
+    public function setToPaid()
+    {
+        return $this->update([
+            'is_paid' => true
         ]);
     }
 }

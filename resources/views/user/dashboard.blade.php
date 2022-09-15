@@ -1,5 +1,5 @@
 <x-app-layout>
-    <section class="dashboard mt-5">
+    <section class="dashboard" style="margin-top: 100px">
         <div class="container">
             <div class="row text-left">
                 <div class=" col-lg-12 col-12 header-wrap mt-4">
@@ -49,17 +49,20 @@
                                     <strong>Status</strong>
                                 </p>
                                 {!! $checkout->is_paid ?
-                                '<p><span class="text-green">Payment Success</span></p>'
-                                : '<p>Waiting for Payment</p>' !!}
+                                '<p><span class="text-green"><strong>Payment Success</strong></span></p>'
+                                : '<p><span class="text-warning"><strong>Waiting for Payment</strong></span></p>' !!}
                             </td>
                             <td>
-                                <a href="#" class="btn btn-primary">
-                                    Get Invoice
+                                <a href="https://wa.me/085821559461?text=Hi, Saya ingin bertanya tentang kelas Gila Belajar"
+                                    target="_blank" class="btn btn-primary">
+                                    Contact Support
                                 </a>
                             </td>
                         </tr>
                         @empty
-
+                        <tr>
+                            <h3 class="text-center">Checkout Not Found</h3>
+                        </tr>
                         @endforelse
                     </tbody>
                 </table>

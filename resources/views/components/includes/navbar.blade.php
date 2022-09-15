@@ -41,7 +41,9 @@
                         class="ms-2 user-photo rounded-circle">
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{{ route('user.dashboard') }}">My Dashboard</a></li>
+                    {!! \Auth::user()->is_admin ?
+                    '<li><a class="dropdown-item" href="'. route('admin.dashboard') .'">Dashboard Admin</a></li>'
+                    : '<li><a class="dropdown-item" href="'. route('user.dashboard') .'">My Dashboard</a></li>' !!}
                     <li><a class="dropdown-item" href="#">Profile</a></li>
                     <li>
                         <form action="{{ route('logout') }}" method="POST" class="d-inline" id="formLogout">

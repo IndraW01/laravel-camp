@@ -25,7 +25,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         CheckoutSucess::class => [
             SendEmailAfterSuccessCheckout::class
-        ]
+        ],
+        \App\Events\Admin\PaidSuccess::class => [
+            \App\Listeners\Admin\SendEmailAfterSuccessPaid::class
+        ],
     ];
 
     /**

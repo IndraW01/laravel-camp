@@ -9,8 +9,10 @@ use App\Models\Checkout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Events\User\CheckoutSucess;
+use App\Events\Admin\PaidSuccess;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\CheckoutRequest;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class CheckoutController extends Controller
 {
@@ -41,10 +43,11 @@ class CheckoutController extends Controller
         }
 
         $validateData = $checkoutRequest->validated();
+        $validateDataUser = $checkoutRequest->safe()->only(['name', 'email', 'occupation']);
 
         DB::beginTransaction();
         try {
-            $user = $this->user->userUpdate($validateData);
+            $user = $this->user->userUpdate($validateDataUser);
             $checkout = $this->checkout->checkoutCreate($camp->id, $user->id, $validateData);
 
             DB::commit();
@@ -64,5 +67,21 @@ class CheckoutController extends Controller
         return response()->view('user.checkout.success', [
             'camp' => $camp
         ]);
+    }
+
+    public function paidAbort()
+    {
+        return abort(404);
+    }
+
+    public function paid(Checkout $checkout)
+    {
+        $checkout->setToPaid();
+
+        event(new PaidSuccess($checkout));
+
+        Alert::success('Berhasil', 'Success Set to Paid User ' . $checkout->load('user')->user->name);
+
+        return back();
     }
 }

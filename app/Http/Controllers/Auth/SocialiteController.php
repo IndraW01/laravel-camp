@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\User\RegisteredSuccess;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -39,7 +40,7 @@ class SocialiteController extends Controller
             try {
                 $userCreate = $this->user->createUserGoogle($user);
 
-                Mail::to($userCreate->email)->send(new AfterRegister($userCreate));
+                event(new RegisteredSuccess($userCreate));
 
                 Auth::login($userCreate);
 
