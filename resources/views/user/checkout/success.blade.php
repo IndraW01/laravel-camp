@@ -12,6 +12,9 @@
                     <h2 class="primary-header ">
                         Berhasil Checkout Paket {{ $camp->title }}
                     </h2>
+                    <p>
+                        Silahkan menuju halaman Dashboard dan lakukan pembayaran
+                    </p>
                     <a href="{{ route('user.dashboard') }}" class="btn btn-primary mt-3">
                         My Dashboard
                     </a>

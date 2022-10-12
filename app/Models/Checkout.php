@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Checkout extends Model
 {
@@ -38,13 +39,10 @@ class Checkout extends Model
         );
     }
 
-    // Tidak dipake, digunakan sebagai bahan pelajaran
-    public function expired(): Attribute
+    public function PaymentStatus(): Attribute
     {
-        $now = Carbon::now();
-
         return Attribute::make(
-            get: fn ($value) => $now->diffInDays(Carbon::create($value))
+            get: fn ($value) => Str::upper($value)
         );
     }
 
@@ -66,6 +64,7 @@ class Checkout extends Model
         return $this->with(['user', 'camp'])->oldest()->get();
     }
 
+    // Tidak dipake, Checkout versi 1
     public function setToPaid()
     {
         return $this->update([

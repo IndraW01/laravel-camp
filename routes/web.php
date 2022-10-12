@@ -24,8 +24,10 @@ Route::controller(CheckoutController::class)->middleware(['auth', 'verified', 'i
     Route::get('/success/{camp:slug}', 'success')->name('success');
     Route::get('/{camp:slug}', 'index')->name('index');
     Route::post('/{camp:slug}/store', 'store')->name('store');
-    Route::get('/paid/{checkout}', 'paidAbort')->withoutMiddleware('isAdmin:user')->middleware('isAdmin:admin');
-    Route::post('/paid/{checkout}', 'paid')->name('paid')->withoutMiddleware('isAdmin:user')->middleware('isAdmin:admin');
+
+    // Route Checkout Versi 1
+    // Route::get('/paid/{checkout}', 'paidAbort')->withoutMiddleware('isAdmin:user')->middleware('isAdmin:admin');
+    // Route::post('/paid/{checkout}', 'paid')->name('paid')->withoutMiddleware('isAdmin:user')->middleware('isAdmin:admin');
 });
 
 require __DIR__ . '/auth.php';

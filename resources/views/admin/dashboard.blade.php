@@ -26,7 +26,6 @@
                                         <th scope="col">Price</th>
                                         <th scope="col">Register Date</th>
                                         <th scope="col">Paid Status</th>
-                                        <th scope="col">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -37,24 +36,9 @@
                                         <td>{{ $checkout->camp->price }}</td>
                                         <td>{{ $checkout->created_at }}</td>
                                         <td>
-                                            {!! $checkout->is_paid ?
-                                            '<span class="badge bg-success">Paid</span>' :
-                                            '<span class="badge bg-warning">Waiting</span>' !!}
-                                        </td>
-                                        <td>
-                                            @if (!$checkout->is_paid)
-                                            <form action="{{ route('checkout.paid', $checkout) }}" method="POST"
-                                                class="formPaid">
-                                                @csrf
-                                                <button type="submit" name="paid" class="btn btn-primary"
-                                                    data-name="{{ $checkout->user->name }}"
-                                                    data-camp="{{ $checkout->camp->title }}">Set to
-                                                    Paid</button>
-                                            </form>
-                                            @else
-                                            <button type="button" class="btn btn-secondary"
-                                                style="width: 157px">Success</button>
-                                            @endif
+                                            {!! $checkout->payment_status == 'PAID' ?
+                                            '<span class="badge bg-success">'. $checkout->payment_status .'</span>' :
+                                            '<span class="badge bg-warning">'. $checkout->payment_status .'</span>' !!}
                                         </td>
                                     </tr>
                                     @empty
@@ -68,32 +52,4 @@
             </div>
         </div>
     </section>
-
-    @push('costum-js')
-    <script>
-        const formPaid = document.querySelectorAll('.formPaid');
-        formPaid.forEach(form => {
-            form.addEventListener('submit', function(event) {
-                const buttonPaidName = this.lastElementChild.dataset.name;
-                const buttonPaidCamp = this.lastElementChild.dataset.camp;
-                event.preventDefault();
-
-                Swal.fire({
-                    title: `Set to Paid User ${buttonPaidName} and Camp ${buttonPaidCamp}?`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, Paid!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                })
-            });
-        });
-
-
-    </script>
-    @endpush
 </x-app-layout>

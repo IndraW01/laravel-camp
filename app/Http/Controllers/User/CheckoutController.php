@@ -197,19 +197,19 @@ class CheckoutController extends Controller
     }
 
     // Admin
-    public function paidAbort()
-    {
-        return abort(404);
-    }
+    // public function paidAbort()
+    // {
+    //     return abort(404);
+    // }
 
-    public function paid(Checkout $checkout)
-    {
-        $checkout->setToPaid();
+    // public function paid(Checkout $checkout)
+    // {
+    //     $checkout->setToPaid();
 
-        event(new PaidSuccess($checkout));
+    //     event(new PaidSuccess($checkout));
 
-        Alert::success('Berhasil', 'Success Set to Paid User ' . $checkout->load('user')->user->name);
+    //     Alert::success('Berhasil', 'Success Set to Paid User ' . $checkout->load('user')->user->name);
 
-        return back();
-    }
+    //     return back();
+    // }
 }

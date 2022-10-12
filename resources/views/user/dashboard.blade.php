@@ -34,12 +34,6 @@
                             </td>
                             <td>
                                 <p class="mb-2">
-                                    <strong>Expired</strong>
-                                </p>
-                                <p>{{ $checkout->expired }} Days</p>
-                            </td>
-                            <td>
-                                <p class="mb-2">
                                     <strong>Price</strong>
                                 </p>
                                 <p>{{ $checkout->camp->price }}K</p>
@@ -48,10 +42,18 @@
                                 <p class="mb-2">
                                     <strong>Status</strong>
                                 </p>
-                                {!! $checkout->is_paid ?
-                                '<p><span class="text-green"><strong>Payment Success</strong></span></p>'
-                                : '<p><span class="text-warning"><strong>Waiting for Payment</strong></span></p>' !!}
+                                {!! $checkout->payment_status == "PAID" ? "<p><span class='text-green'><strong>".
+                                            $checkout->payment_status ."</strong></span></p>" : "<p><span
+                                        class='text-warning'><strong>". $checkout->payment_status ."</strong></span></p>
+                                " !!}
                             </td>
+                            @if ($checkout->payment_status != 'PAID')
+                            <td>
+                                <a href="{{ $checkout->midtrans_url }}" class="btn btn-primary">
+                                    Pay Here
+                                </a>
+                            </td>
+                            @endif
                             <td>
                                 <a href="https://wa.me/085821559461?text=Hi, Saya ingin bertanya tentang kelas Gila Belajar"
                                     target="_blank" class="btn btn-primary">
