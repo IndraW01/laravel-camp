@@ -56,39 +56,25 @@
                                     @enderror
                                 </div>
                                 <div class="mb-4">
-                                    <label for="card_number" class="form-label">Card Number</label>
-                                    <input type="number" class="form-control @error('card_number') is-invalid @enderror"
-                                        name="card_number" id="card_number" value="{{ old('card_number') }}">
-                                    @error('card_number')
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input type="text" class="form-control @error('phone') is-invalid @enderror"
+                                        name="phone" id="phone" value="{{ old('phone', \Auth::user()->phone) }}">
+                                    @error('phone')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                     @enderror
                                 </div>
-                                <div class="mb-5">
-                                    <div class="row">
-                                        <div class="col-lg-6 col-12">
-                                            <label for="expired" class="form-label">Expired</label>
-                                            <input type="month"
-                                                class="form-control @error('expired') is-invalid @enderror"
-                                                name="expired" id="expired" value="{{ old('expired') }}">
-                                            @error('expired')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <label for="cvc" class="form-label">CVC</label>
-                                            <input type="number" class="form-control @error('cvc') is-invalid @enderror"
-                                                name="cvc" id="cvc" value="{{ old('cvc') }}">
-                                            @error('cvc')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-                                        </div>
+                                <div class="mb-4">
+                                    <label for="address" class="form-label">Address</label>
+                                    <input type="text" class="form-control @error('address') is-invalid @enderror"
+                                        name="address" id="address"
+                                        value="{{ old('address', \Auth::user()->address) }}">
+                                    @error('address')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
                                     </div>
+                                    @enderror
                                 </div>
                                 <button type="submit" class="w-100 btn btn-primary">Pay Now</button>
                                 <p class="text-center subheader mt-4">

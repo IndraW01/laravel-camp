@@ -28,25 +28,28 @@ class CheckoutRequest extends FormRequest
         return [
             'email' => ['required', 'email', Rule::unique('users')->ignore(Auth::user()->id)],
             'name' => ['required'],
-            'occupation' => ['required'],
-            'card_number' => ['required', 'numeric', 'digits_between:8,16'],
-            'expired' => ['required', 'date', 'after_or_equal:' . date('Y-m')],
-            'cvc' => ['required', 'numeric', 'digits:3']
+            'occupation' => ['required', 'string'],
+            'phone' => ['required', 'string'],
+            'address' => ['required', 'string']
         ];
     }
 
-    public function messages()
-    {
-        return [
-            'expired.after_or_equal' => 'Expired harus berisi Bulan setelah atau sama dengan :date.'
-        ];
-    }
+    /*
+        * Checkout Versi 1
 
-    public function attributes()
-    {
-        return [
-            'card_number' => 'Card Number',
-            'cvc' => 'CVC',
-        ];
-    }
+        public function messages()
+        {
+            return [
+                'expired.after_or_equal' => 'Expired harus berisi Bulan setelah atau sama dengan :date.'
+            ];
+        }
+
+        public function attributes()
+        {
+            return [
+                'card_number' => 'Card Number',
+                'cvc' => 'CVC',
+            ];
+        }
+    */
 }
