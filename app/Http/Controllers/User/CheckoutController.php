@@ -139,8 +139,56 @@ class CheckoutController extends Controller
 
             return $paymentUrl;
         } catch (Exception $exception) {
-            return false;
+            return $exception->getMessage();
         }
+    }
+
+    // Buat Callback function untuk http notification midtrans
+    public function midtransCallback(Request $request)
+    {
+        $notif = new Midtrans\Notification();
+
+        $transaction_status = $notif->transaction_status;
+        $farud = $notif->fraud_status;
+
+        // get checkout id
+        $checkout_id = explode('-', $notif->order_id)[1];
+        $checkout = Checkout::find($checkout_id);
+
+        // cek kondisi pembayaran
+        if ($transaction_status == 'capture') {
+            if ($farud == 'challenge') {
+                // TODO Set payment status in merchant's database to 'challenge'
+                $checkout->payment_status = 'pending';
+            } else if ($farud == 'accept') {
+                // TODO Set payment status in merchant's database to 'success'
+                $checkout->payment_status = 'paid';
+            }
+        } else if ($transaction_status == 'cancel') {
+            if ($farud == 'challenge') {
+                // TODO Set payment status in merchant's database to 'failure'
+                $checkout->payment_status = 'failed';
+            } else if ($farud == 'accept') {
+                // TODO Set payment status in merchant's database to 'failure'
+                $checkout->payment_status = 'failed';
+            }
+        } else if ($transaction_status == 'deny') {
+            // TODO Set payment status in merchant's database to 'failure'
+            $checkout->payment_status = 'failed';
+        } else if ($transaction_status == 'settlement') {
+            // TODO Set payment status in merchant's database to 'settlement'
+            $checkout->payment_status = 'paid';
+        } else if ($transaction_status == 'pending') {
+            // TODO Set payment status in merchant's database to 'pending'
+            $checkout->payment_status = 'pending';
+        } else if ($transaction_status == 'expire') {
+            // TODO Set payment status in merchant's database to 'expire'
+            $checkout->payment_status = 'failed';
+        }
+
+        $checkout->save();
+
+        return view('user.checkout.success');
     }
 
     // Admin

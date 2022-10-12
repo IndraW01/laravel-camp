@@ -15,6 +15,10 @@ Route::get('user/dashboard', [DashboardUserController::class, 'index'])->name('u
 // Admin Dashboard
 Route::get('admin/dashboard', [DashboardAdminController::class, 'index'])->name('admin.dashboard')->middleware(['auth', 'verified', 'isAdmin:admin']);
 
+// Midtrans routes
+Route::get('payment/success', [CheckoutController::class, 'midtransCallback']);
+Route::post('payment/success', [CheckoutController::class, 'midtransCallback']);
+
 // Checkout
 Route::controller(CheckoutController::class)->middleware(['auth', 'verified', 'isAdmin:user'])->name('checkout.')->prefix('/checkout')->group(function () {
     Route::get('/success/{camp:slug}', 'success')->name('success');
