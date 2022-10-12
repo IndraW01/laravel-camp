@@ -53,14 +53,11 @@ class Checkout extends Model
         return $this->whereUserId(Auth::id())->whereCampId($campId)->exists();
     }
 
-    public function checkoutCreate($campId, $userId, $validateData)
+    public function checkoutCreate($campId, $userId)
     {
         return $this->create([
             'user_id' => $userId,
             'camp_id' => $campId,
-            'card_number' => $validateData['card_number'],
-            'expired' => date('Y-m-t', strtotime($validateData['expired'])),
-            'cvc' => $validateData['cvc'],
         ]);
     }
 

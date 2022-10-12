@@ -51,18 +51,19 @@ class CheckoutController extends Controller
             return redirect()->route('user.dashboard')->with('findCheckout', 'You have already checkout the package ' . $camp->title);
         }
 
-        $validateData = $checkoutRequest->validated();
-        $validateDataUser = $checkoutRequest->safe()->only(['name', 'email', 'occupation']);
+        $validateDataUser = $checkoutRequest->safe()->only(['name', 'email', 'occupation', 'phone', 'address']);
 
         DB::beginTransaction();
         try {
             $user = $this->user->userUpdate($validateDataUser);
-            $checkout = $this->checkout->checkoutCreate($camp->id, $user->id, $validateData);
+            $checkout = $this->checkout->checkoutCreate($camp->id, $user->id);
 
+            // kirim kan parameter dan update table checkout
             $this->getSnapRedirect($checkout);
 
             DB::commit();
 
+            // kirim email succes chekout
             CheckoutSucess::dispatch($checkout);
 
             return redirect()->route('checkout.success', $camp);
@@ -139,14 +140,14 @@ class CheckoutController extends Controller
 
             return $paymentUrl;
         } catch (Exception $exception) {
-            return $exception->getMessage();
+            return false;
         }
     }
 
     // Buat Callback function untuk http notification midtrans
     public function midtransCallback(Request $request)
     {
-        $notif = new Midtrans\Notification();
+        $notif = $request->method() == 'POST' ? new Midtrans\Notification() : Midtrans\Transaction::status($request->order_id);
 
         $transaction_status = $notif->transaction_status;
         $farud = $notif->fraud_status;
@@ -154,6 +155,8 @@ class CheckoutController extends Controller
         // get checkout id
         $checkout_id = explode('-', $notif->order_id)[1];
         $checkout = Checkout::find($checkout_id);
+        // get camp
+        $camp = $checkout->camp;
 
         // cek kondisi pembayaran
         if ($transaction_status == 'capture') {
@@ -188,7 +191,9 @@ class CheckoutController extends Controller
 
         $checkout->save();
 
-        return view('user.checkout.success');
+        return view('user.checkout.success', [
+            'camp' => $camp
+        ]);
     }
 
     // Admin
