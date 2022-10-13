@@ -44,7 +44,9 @@
                     {!! \Auth::user()->is_admin ?
                     '<li><a class="dropdown-item" href="'. route('admin.dashboard') .'">Dashboard Admin</a></li>'
                     : '<li><a class="dropdown-item" href="'. route('user.dashboard') .'">My Dashboard</a></li>' !!}
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    @if (\Auth::user()->is_admin)
+                    <li><a class="dropdown-item" href="{{ route('admin.discount.index') }}">Discount</a></li>
+                    @endif
                     <li>
                         <form action="{{ route('logout') }}" method="POST" class="d-inline" id="formLogout">
                             @csrf

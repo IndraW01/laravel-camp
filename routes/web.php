@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardAdminController;
+use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Main\DashboardController;
 use App\Http\Controllers\User\CheckoutController;
 use App\Http\Controllers\User\DashboardUserController;
@@ -10,14 +11,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [DashboardController::class, 'index'])->name('main.dashboard');
 
 // User Dashboard
-Route::get('user/dashboard', [DashboardUserController::class, 'index'])->name('user.dashboard')->middleware(['auth', 'verified', 'isAdmin:user']);
+Route::get('/user/dashboard', [DashboardUserController::class, 'index'])->name('user.dashboard')->middleware(['auth', 'verified', 'isAdmin:user']);
 
-// Admin Dashboard
-Route::get('admin/dashboard', [DashboardAdminController::class, 'index'])->name('admin.dashboard')->middleware(['auth', 'verified', 'isAdmin:admin']);
+// Admin Route
+Route::middleware(['auth', 'verified', 'isAdmin:admin'])->prefix('/admin/dashboard')->name('admin.')->group(function () {
+    Route::get('/', [DashboardAdminController::class, 'index'])->name('dashboard');
+    Route::resource('/discount', DiscountController::class);
+});
 
 // Midtrans routes
-Route::get('payment/success', [CheckoutController::class, 'midtransCallback']);
-Route::post('payment/success', [CheckoutController::class, 'midtransCallback']);
+Route::get('/payment/success', [CheckoutController::class, 'midtransCallback']);
+Route::post('/payment/success', [CheckoutController::class, 'midtransCallback']);
 
 // Checkout
 Route::controller(CheckoutController::class)->middleware(['auth', 'verified', 'isAdmin:user'])->name('checkout.')->prefix('/checkout')->group(function () {
