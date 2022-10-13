@@ -33,7 +33,16 @@
                                     <tr>
                                         <th scope="row">{{ $checkout->user->name }}</th>
                                         <td>{{ $checkout->camp->title }}</td>
-                                        <td>{{ $checkout->camp->price }}</td>
+                                        <td>
+
+                                            Rp. {{ $checkout->total < 1000 ? number_format($checkout->total * 1000)
+                                                :number_format($checkout->total) }}
+                                                @if ($checkout->discount)
+                                                <span class="ms-2 badge bg-success">Disc {{
+                                                    $checkout->discount_percentage
+                                                    }}%</span>
+                                                @endif
+                                        </td>
                                         <td>{{ $checkout->created_at }}</td>
                                         <td>
                                             {!! $checkout->payment_status == 'PAID' ?

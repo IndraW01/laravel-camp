@@ -17,9 +17,12 @@ class Checkout extends Model
     protected $fillable = [
         'user_id',
         'camp_id',
+        'discount_id',
         'payment_status',
         'midtrans_url',
-        'midtrans_booking_code'
+        'midtrans_booking_code',
+        'discount_percentage',
+        'total',
     ];
 
     public function user()
@@ -30,6 +33,11 @@ class Checkout extends Model
     public function camp()
     {
         return $this->belongsTo(Camp::class);
+    }
+
+    public function discount()
+    {
+        return $this->belongsTo(Discount::class);
     }
 
     public function createdAt(): Attribute
@@ -51,11 +59,13 @@ class Checkout extends Model
         return $this->whereUserId(Auth::id())->whereCampId($campId)->exists();
     }
 
-    public function checkoutCreate($campId, $userId)
+    public function checkoutCreate($campId, $userId, $discount)
     {
         return $this->create([
             'user_id' => $userId,
             'camp_id' => $campId,
+            'discount_id' => $discount['discount_id'],
+            'discount_percentage' => $discount['discount_percentage'],
         ]);
     }
 

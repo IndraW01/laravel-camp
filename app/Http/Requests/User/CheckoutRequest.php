@@ -30,7 +30,10 @@ class CheckoutRequest extends FormRequest
             'name' => ['required'],
             'occupation' => ['required', 'string'],
             'phone' => ['required', 'string'],
-            'address' => ['required', 'string']
+            'address' => ['required', 'string'],
+            'discount' => ['nullable', Rule::exists('discounts', 'code')->where(function ($query) {
+                return $query->whereNull('deleted_at');
+            })]
         ];
     }
 

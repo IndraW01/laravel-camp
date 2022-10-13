@@ -36,7 +36,14 @@
                                 <p class="mb-2">
                                     <strong>Price</strong>
                                 </p>
-                                <p>{{ $checkout->camp->price }}K</p>
+                                <p>
+                                    Rp. {{ $checkout->total < 1000 ? number_format($checkout->total * 1000)
+                                        :number_format($checkout->total) }}
+                                        @if ($checkout->discount)
+                                        <span class="ms-2 badge bg-success">Disc {{ $checkout->discount_percentage
+                                            }}%</span>
+                                        @endif
+                                </p>
                             </td>
                             <td>
                                 <p class="mb-2">
@@ -47,13 +54,13 @@
                                         class='text-warning'><strong>". $checkout->payment_status ."</strong></span></p>
                                 " !!}
                             </td>
-                            @if ($checkout->payment_status != 'PAID')
                             <td>
+                                @if ($checkout->payment_status != 'PAID')
                                 <a href="{{ $checkout->midtrans_url }}" class="btn btn-primary">
                                     Pay Here
                                 </a>
+                                @endif
                             </td>
-                            @endif
                             <td>
                                 <a href="https://wa.me/085821559461?text=Hi, Saya ingin bertanya tentang kelas Gila Belajar"
                                     target="_blank" class="btn btn-primary">

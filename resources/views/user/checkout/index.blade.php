@@ -76,6 +76,16 @@
                                     </div>
                                     @enderror
                                 </div>
+                                <div class="mb-4">
+                                    <label for="discount" class="form-label">Discount Code</label>
+                                    <input type="text" class="form-control @error('discount') is-invalid @enderror"
+                                        name="discount" id="discount" value="{{ old('discount') }}">
+                                    @error('discount')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
                                 <button type="submit" class="w-100 btn btn-primary">Pay Now</button>
                                 <p class="text-center subheader mt-4">
                                     <img src="/assets/images/ic_secure.svg" alt=""> Your payment is secure and

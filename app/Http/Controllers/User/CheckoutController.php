@@ -14,6 +14,7 @@ use App\Events\User\CheckoutSucess;
 use App\Http\Controllers\Controller;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Requests\User\CheckoutRequest;
+use App\Models\Discount;
 // use class midtrans
 use Midtrans;
 
@@ -55,8 +56,22 @@ class CheckoutController extends Controller
 
         DB::beginTransaction();
         try {
+            // Update User Checkout
             $user = $this->user->userUpdate($validateDataUser);
-            $checkout = $this->checkout->checkoutCreate($camp->id, $user->id);
+
+            // konfigurasi checkout discount
+            if ($checkoutRequest->discount) {
+                $discount = Discount::whereCode($checkoutRequest->discount)->first();
+
+                $dataDiscount['discount_id'] = $discount->id ?? null;
+                $dataDiscount['discount_percentage'] = $discount->percentage ?? null;
+            } else {
+                $dataDiscount['discount_id'] =  null;
+                $dataDiscount['discount_percentage'] =  null;
+            }
+
+            // Create Checkout
+            $checkout = $this->checkout->checkoutCreate($camp->id, $user->id, $dataDiscount);
 
             // kirim kan parameter dan update table checkout
             $this->getSnapRedirect($checkout);
@@ -90,18 +105,32 @@ class CheckoutController extends Controller
 
         $checkout->midtrans_booking_code = $orderId;
 
-        // Bikin Transaksi detailnya seperti di doc
-        $transaction_details = [
-            'order_id' => $orderId,
-            'gross_amount' => $price
-        ];
-
         // Item detail bisa lebih dari satu
         $item_details[] = [
             'id' => $orderId,
             'price' => $price,
             'quantity' => 1,
             'name' => "Payment for {$checkout->camp->title} Camp"
+        ];
+
+        // cek discount
+        $discountPrice = 0;
+        if ($checkout->discount) {
+            $discountPrice = $price * $checkout->discount_percentage / 100;
+            $item_details[] = [
+                'id' => $checkout->discount->code,
+                'price' => -$discountPrice,
+                'quantity' => 1,
+                'name' => "Discount {$checkout->discount->name} ({$checkout->discount_percentage})"
+            ];
+        }
+
+        // buat total
+        $total = $price - $discountPrice;
+        // Bikin Transaksi detailnya seperti di doc
+        $transaction_details = [
+            'order_id' => $orderId,
+            'gross_amount' => $total
         ];
 
         // Buat Varibael untuk billing dan shipping address
@@ -136,6 +165,7 @@ class CheckoutController extends Controller
             $paymentUrl = \Midtrans\Snap::createTransaction($midtrans_paramps)->redirect_url;
             // Update Table Checkout
             $checkout->midtrans_url = $paymentUrl;
+            $checkout->total = $total;
             $checkout->save();
 
             return $paymentUrl;
